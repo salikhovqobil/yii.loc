@@ -11,7 +11,6 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
-    'modules' =>[],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
@@ -46,6 +45,30 @@ return [
             ],
         ],
 
+    ],
+    'modules' => [
+        'admin' => [
+            'class' => 'mdm\admin\Module',
+//            'layout' => null, // it can be '@path/to/your/layout'.
+            'layout' => 'left-menu',
+            'mainLayout' => '@backend/views/layouts/main.php',
+            'controllerMap' => [
+                'assignment' => [
+                    'class' => 'mdm\admin\controllers\AssignmentController',
+                    'userClassName' => 'common\models\User',
+                    'idField' => 'id'
+                ],
+//                'other' => [
+//                    'class' => 'path\to\OtherController', // add another controller
+//                ],
+            ],
+            'menus' => [
+                'assignment' => [
+                    'label' => 'Grand Access' // change label
+                ],
+                'route' => null, // disable menu route
+            ]
+        ],
     ],
     'params' => $params,
 ];

@@ -1,0 +1,21 @@
+Options +FollowSymLinks
+IndexIgnore */*
+RewriteEngine on
+
+# Если запрос начинается с "uploads/", перенаправляем в backend/web/uploads/
+RewriteRule ^uploads/(.*)$ backend/web/uploads/$1 [L]
+
+RewriteRule ^assets/(.*)$ frontend/web/assets/$1 [L]
+
+# Если запрос начинается с "zay/", перенаправляем в frontend/web/zay/
+RewriteRule ^zay/(.*)$ frontend/web/zay/$1 [L]
+
+# Для всех остальных запросов перенаправляем в frontend/web/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ frontend/web/$1 [L]
+
+# Если файл или директория не существует, перенаправляем в frontend/web/index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . frontend/web/index.php [L]

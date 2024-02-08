@@ -2,6 +2,7 @@
 
 namespace frontend\models;
 
+use PhpParser\Node\Stmt\Echo_;
 use Yii;
 use yii\base\Model;
 use common\models\User;
@@ -14,6 +15,16 @@ class SignupForm extends Model
     public $username;
     public $email;
     public $password;
+
+    public function init()
+
+    {
+        $this->on(User::EVENT_NEW_USER_REGISTERED,[$this,'sendSMS']);
+        parent::init();
+    }
+    public function sendSMS(){
+        echo 'Bu sms';die();
+    }
 
 
     /**
@@ -48,15 +59,24 @@ class SignupForm extends Model
         if (!$this->validate()) {
             return null;
         }
-        
+
         $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
+//        $user->role = User::ROLE_USER;
+
+//        $auth = \Yii::$app->authManager;
+//        $authorRole = $auth->getRole('user');
+//        $auth->assign($authorRole, $user->getId());
+
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
-
-        return $user->save() && $this->sendEmail($user);
+        if ($user->save()){
+            $this->trigger(User::EVENT_NEW_USER_REGISTERED);
+            return true;
+        }
+        return false;
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 
 namespace frontend\controllers;
+//session_start();
 
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
@@ -15,7 +16,6 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
-
 /**
  * Site controller
  */
@@ -130,8 +130,8 @@ class SiteController extends Controller
 
             return $this->refresh();
         }
-
-        return $this->render('contact', [
+//        Yii::$app->language = 'uz';
+         return $this->render('contact', [
             'model' => $model,
         ]);
     }
@@ -143,6 +143,7 @@ class SiteController extends Controller
      */
     public function actionAbout()
     {
+//        Yii::$app->language = 'uz';
         return $this->render('about');
     }
 
@@ -255,5 +256,13 @@ class SiteController extends Controller
         return $this->render('resendVerificationEmail', [
             'model' => $model
         ]);
+    }
+
+    public function actionChangelang()
+    {
+        Yii::$app->language = Yii::$app->request->get('lang');
+        $session = Yii::$app->session;
+        $session['lang'] = Yii::$app->language;
+        return $this->goHome();
     }
 }
